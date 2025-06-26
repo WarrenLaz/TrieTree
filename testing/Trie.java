@@ -1,4 +1,10 @@
-import java.io.*;
+package testing;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -64,6 +70,65 @@ public class Trie implements Serializable{
         }
     }
 
+    private Node<Character, LinkedList<String>> getNode(Node<Character, LinkedList<String>> node, char alpha ){
+        if(node.next == null){
+            return null;
+        }
+        
+        for (Node<Character, LinkedList<String>> current : node.next) {
+            if (alpha == current.key) {
+                return current;
+            }
+        }
+
+        return null;
+    }
+
+    public LinkedList<String> get(String item){
+        char[] namespace = item.toCharArray();
+        Node<Character, LinkedList<String> > current = this.root;
+        for (char elem : namespace) {
+            if(current == null){
+                return null;
+            }
+            current = this.getNode(current, elem);
+        }
+        return current == null ? null: current.value;
+    }
+
+    private Node<Character, LinkedList<String>> removeNode(Node<Character, LinkedList<String>> node, char alpha, String ID ){
+        if(node.next == null){
+            return null;
+        }
+
+        for (Node<Character, LinkedList<String>> current : node.next) {
+            if (alpha == current.key) {
+                current.value.remove(ID);
+                return current;
+            }
+        }
+
+        var IDlist = new LinkedList<String>();
+        IDlist.add(ID);
+        var newNode = new Node<>(alpha, IDlist);
+        node.next.add(newNode);
+
+        return newNode;
+    }
+ 
+    public boolean remove(String item, String ID){
+        char[] namespace = item.toCharArray();
+        Node<Character, LinkedList<String>> current = this.root;
+        for (char elem : namespace) {
+            if(current == null){
+                return false;
+            }
+            current = this.removeNode(current, elem, ID);
+        }
+
+        return true;
+    }
+
     @Override
     public String toString(){
         Queue<Node<Character, LinkedList<String>>> queue = new LinkedList<>();
@@ -86,14 +151,6 @@ public class Trie implements Serializable{
         }
 
         return output;
-    }
-
-    public boolean remove(String item){
-        return true;
-    }
-
-    public String[] get(String item){
-        return null;
     }
 
     public void saveObject(){

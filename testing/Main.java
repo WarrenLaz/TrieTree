@@ -20,5 +20,6 @@ public class Main{
         tree.saveObject();
 
         System.out.println(tree.toString());
+        System.out.print(tree.get("bcdj"));
     }
 }
