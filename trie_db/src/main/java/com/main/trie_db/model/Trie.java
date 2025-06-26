@@ -141,9 +141,9 @@ public class Trie implements Serializable{
         }
     }
 
-    public static Trie loadObject(String objectUID) {
+    public static Trie loadObject(String path) {
         Trie obj = null;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(objectUID + ".ser"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
             obj = (Trie) ois.readObject();
             System.out.println("Object loaded.");
         } catch (IOException | ClassNotFoundException e) {
